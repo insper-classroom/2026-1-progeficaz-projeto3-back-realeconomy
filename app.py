@@ -2,17 +2,18 @@ from flask import Flask
 from flask_cors import CORS
 from pymongo import MongoClient
 from config import MONGO_URI
+from flask_jwt_extended import JWTManager
+from config import JWT_SECRET_KEY
+
+from routes.auth import auth_bp
 
 app = Flask(__name__)
 CORS(app)
 
-client = MongoClient(MONGO_URI)
+app.config["JWT_SECRET_KEY"] = JWT_SECRET_KEY
+jwt = JWTManager(app)
 
-try:
-    client.admin.command("ping")
-    print("✅ Conectado ao MongoDB!")
-except Exception as e:
-    print(f"❌ Erro ao conectar: {e}")
+app.register_blueprint(auth_bp)
 
 if __name__ == "__main__":
     app.run(debug=True)
