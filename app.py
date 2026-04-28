@@ -1,7 +1,5 @@
 from flask import Flask
 from flask_cors import CORS
-from pymongo import MongoClient
-from config import MONGO_URI
 from flask_jwt_extended import JWTManager
 from config import JWT_SECRET_KEY
 

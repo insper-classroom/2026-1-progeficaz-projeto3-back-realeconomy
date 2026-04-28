@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from flask_jwt_extended import create_access_token
 from database import usuarios_collection
 import bcrypt
+from utils import validar_cpf
 
 auth_bp = Blueprint("auth", __name__)
 
@@ -9,6 +10,9 @@ auth_bp = Blueprint("auth", __name__)
 @auth_bp.route("/auth/register", methods=["POST"])
 def register():
     dados = request.get_json()
+    
+    if not validar_cpf(dados["cpf"]):
+        return jsonify({"erro": "CPF inválido"}), 400
 
     if usuarios_collection.find_one({"cpf": dados["cpf"]}):
         return jsonify({"erro": "CPF já cadastrado"}), 400
@@ -18,7 +22,8 @@ def register():
     usuario = {
         "nome": dados["nome"],
         "cpf": dados["cpf"],
-        "senha": senha_hash
+        "senha": senha_hash,
+        "role": "usuario"
     }
 
     resultado = usuarios_collection.insert_one(usuario)

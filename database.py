@@ -7,7 +7,6 @@ db = client.get_database("loteria")
 usuarios_collection = db["usuarios"]
 usuarios_collection.create_index("cpf", unique=True) # impede duplicação no db
 
-apostas_collection = db["apostas"]
 
 try:
     client.admin.command("ping")
