@@ -41,6 +41,14 @@ def listar_imoveis():
     imoveis = list(imoveis_collection.find(filtros))
     return jsonify([serializar(i) for i in imoveis]), 200
 
+# GET /imoveis/<id> — detalhe de um imóvel
+@imoveis_bp.route("/imoveis/<id>", methods=["GET"])
+def buscar_imovel(id):
+    imovel = imoveis_collection.find_one({"_id": ObjectId(id)})
+    if not imovel:
+        return jsonify({"erro": "Imóvel não encontrado"}), 404
+    return jsonify(serializar(imovel)), 200
+
 # POST /imoveis — cadastra um imóvel
 @imoveis_bp.route("/imoveis", methods=["POST"])
 @jwt_required()
