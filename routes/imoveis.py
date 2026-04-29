@@ -26,17 +26,24 @@ def listar_imoveis():
     preco_max = request.args.get("preco_max")
 
     if cidade:
-        filtros["cidade"] = {"$regex": cidade, "$options": "i"}
+        cidades_lista = cidade.split(',')
+        filtros["cidade"] = {"$in": cidades_lista}
     if tipo_negocio:
-        filtros["tipo_negocio"] = tipo_negocio
+        tipos_lista = tipo_negocio.split(',')
+        filtros["tipo_negocio"] = {"$in": tipos_lista}
     if tipo_imovel:
-        filtros["tipo_imovel"] = tipo_imovel
+        tipos_lista = tipo_imovel.split(',')
+        filtros["tipo_imovel"] = {"$in": tipos_lista}
     if preco_min or preco_max:
-        filtros["preco"] = {}
+        preco_filtro = {}
         if preco_min:
-            filtros["preco"]["$gte"] = float(preco_min)
+            preco_filtro["$gte"] = float(preco_min)
         if preco_max:
-            filtros["preco"]["$lte"] = float(preco_max)
+            preco_filtro["$lte"] = float(preco_max)
+        filtros["$or"] = [
+            {"preco_venda": {**preco_filtro, "$exists": True, "$ne": None}},
+            {"preco_aluguel": {**preco_filtro, "$exists": True, "$ne": None}}
+        ]
 
     imoveis = list(imoveis_collection.find(filtros))
     return jsonify([serializar(i) for i in imoveis]), 200
