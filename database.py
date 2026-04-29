@@ -6,6 +6,8 @@ db = client.get_database("imoveis")
 
 usuarios_collection = db["usuarios"]
 usuarios_collection.create_index("cpf", unique=True) # impede duplicação no db
+
+cidades_collection = db["cidades"]
 imoveis_collection = db["imoveis"]
 
 try:

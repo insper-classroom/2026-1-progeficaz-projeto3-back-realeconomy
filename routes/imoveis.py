@@ -97,6 +97,14 @@ def criar_imovel():
     imovel["usuario_id"] = usuario_id
     return jsonify(imovel), 201
 
+# GET /meus-imoveis — lista imóveis do usuário logado
+@imoveis_bp.route("/meus-imoveis", methods=["GET"])
+@jwt_required()
+def meus_imoveis():
+    usuario_id = get_jwt_identity()
+    imoveis = list(imoveis_collection.find({"usuario_id": ObjectId(usuario_id)}))
+    return jsonify([serializar(i) for i in imoveis]), 200
+
 # PUT /imoveis/<id> — edita um imóvel
 @imoveis_bp.route("/imoveis/<id>", methods=["PUT"])
 @jwt_required()
