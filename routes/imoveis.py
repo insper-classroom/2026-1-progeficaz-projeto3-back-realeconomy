@@ -85,20 +85,21 @@ def criar_imovel():
         return jsonify({"erro": f"Erro ao consultar CEP: {str(e)}"}), 500
 
     imovel = {
-        "usuario_id": ObjectId(usuario_id),
-        "tipo_negocio": dados["tipo_negocio"],
-        "tipo_imovel": dados["tipo_imovel"],
-        "preco_venda": float(dados["preco_venda"]) if "venda" in tipo_negocio else None,
-        "preco_aluguel": float(dados["preco_aluguel"]) if "aluguel" in tipo_negocio else None, 
-        "cep": cep,
-        "logradouro": endereco["logradouro"],
-        "numero": dados["numero"],
-        "bairro": endereco["bairro"],
-        "cidade": endereco["localidade"],
-        "estado": endereco["uf"],
-        "descricao": dados.get("descricao", "")
+    "usuario_id": ObjectId(usuario_id),
+    "tipo_negocio": tipo_negocio,
+    "tipo_imovel": dados["tipo_imovel"],
+    "preco_venda": float(dados["preco_venda"]) if "venda" in tipo_negocio else None,
+    "preco_aluguel": float(dados["preco_aluguel"]) if "aluguel" in tipo_negocio else None,
+    "cep": dados["cep"],
+    "logradouro": dados.get("logradouro", ""),
+    "numero": dados["numero"],
+    "complemento": dados.get("complemento", ""),
+    "bairro": dados.get("bairro", ""),
+    "cidade": dados.get("cidade", ""),
+    "estado": dados.get("estado", ""),
+    "descricao": dados.get("descricao", "")
     }
-
+    
     resultado = imoveis_collection.insert_one(imovel)
     imovel["_id"] = str(resultado.inserted_id)
     imovel["usuario_id"] = usuario_id
