@@ -97,7 +97,8 @@ def criar_imovel():
     "bairro": dados.get("bairro", ""),
     "cidade": dados.get("cidade", ""),
     "estado": dados.get("estado", ""),
-    "descricao": dados.get("descricao", "")
+    "descricao": dados.get("descricao", ""),
+    "imagens": dados.get("imgaens", [])
     }
     
     resultado = imoveis_collection.insert_one(imovel)
